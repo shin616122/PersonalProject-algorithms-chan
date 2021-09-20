@@ -13,6 +13,7 @@
     "@emotion/react": "^11.4.1",
     "@emotion/server": "latest",
     "@emotion/styled": "latest",
+    "@mui/icons-material": "^5.0.0",
     "@mui/material": "^5.0.0",
     "@mui/styled-engine-sc": "^5.0.0",
     "framer-motion": "^4.1.17",

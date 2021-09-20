@@ -12,20 +12,36 @@ const spring = {
 
 export default (() => {
     const [dataArray, setDataArray] = useState<number[]>([]);
-    const [range, setRange] = useState<number>(4);
-    const [count, setCount] = useState<number>(4);
-    const [rangeError, setRangeError] = useState<string>('');
-    const [countError, setCountError] = useState<string>('');
+    const [arrayLength, setArrayLength] = useState<number>(4);
+    const [value, setValue] = useState<number>(4);
+    const [arrayLengthError, setArrayLengthError] = useState<string>('');
+    const [valueError, setValueError] = useState<string>('');
+    const [isSorting, setIsSorting] = useState<boolean>(false);
 
-    const createArray = (range: number, count: number) => {
-        let nums = new Set<number>();
-        while (nums.size < count) {
-            nums.add(Math.floor(Math.random() * (range + 1)));
+    const createArray = (length: number, value: number) => {
+        if (length < 2 || length > 20) {
+            setArrayLengthError('Invalid value. 2-20');
+            return;
         }
-        setDataArray([...Array.from(nums)]);
+
+        if (value < length || value > 100) {
+            setValueError(`Invalid value. ${arrayLength}-100`);
+            return;
+        }
+        setArrayLengthError('');
+        setValueError('');
+
+        let randomnumbers = new Set<number>();
+
+        while (randomnumbers.size < length) {
+            randomnumbers.add(Math.floor(Math.random() * value) + 1);
+        }
+
+        setDataArray([...Array.from(randomnumbers)]);
     };
 
     const bubbleSort = async (data: number[]) => {
+        setIsSorting(true);
         for (var i = 0; i < data.length; i++) {
             for (var j = data.length - 1; j > i; j--) {
                 if (data[j] < data[j - 1]) {
@@ -37,32 +53,19 @@ export default (() => {
                 }
             }
         }
+        setIsSorting(false);
     };
 
-    const handleRangeChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let rangeInput = e.target.valueAsNumber;
-        if (rangeInput >= 2 && rangeInput <= 100) {
-            setRange(rangeInput);
-            setRangeError('');
-        }
-        else {
-            setRangeError('Invalid value. 2-20')
-        }
+    const handleArrayLengthChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setArrayLength(e.target.valueAsNumber);
     };
 
-    const handleCountChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let countInput = e.target.valueAsNumber;
-        if (countInput >= 0 && countInput <= 100 && countInput >= range) {
-            setCount(countInput);
-            setCountError('');
-        }
-        else {
-            setCountError(`Invalid value. ${range}-100`)
-        }
+    const handleValueChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(e.target.valueAsNumber);
     };
 
     useEffect(() => {
-        createArray(range, count);
+        createArray(arrayLength, value);
     }, []);
 
     return (
@@ -77,40 +80,44 @@ export default (() => {
                     p: 5
                 }}
             >
-                <FormControl error={rangeError === '' ? false : true} variant="standard">
-                    <InputLabel htmlFor="range">Range</InputLabel>
+                <FormControl error={arrayLengthError === '' ? false : true} variant="standard">
+                    <InputLabel htmlFor="arrayLength">Range</InputLabel>
                     <Input
-                        id="range"
-                        value={range}
-                        onChange={handleRangeChanged}
-                        aria-describedby="range-error-text"
+                        id="arrayLength"
+                        value={arrayLength}
+                        onChange={handleArrayLengthChanged}
+                        aria-describedby="arrayLength-error-text"
                         type='number'
                     />
-                    {rangeError === '' ? null : <FormHelperText id="range-error-text">{rangeError}</FormHelperText>}
+                    {arrayLengthError === '' ? null : <FormHelperText id="range-error-text">{arrayLengthError}</FormHelperText>}
                 </FormControl>
-                <FormControl error={countError === '' ? false : true} variant="standard" style={{ paddingLeft: '20px' }}>
-                    <InputLabel htmlFor="count" style={{ paddingLeft: '20px' }}>Count</InputLabel>
+                <FormControl error={valueError === '' ? false : true} variant="standard" style={{ paddingLeft: '20px' }}>
+                    <InputLabel htmlFor="value" style={{ paddingLeft: '20px' }}>Count</InputLabel>
                     <Input
-                        id="count"
-                        value={count}
-                        onChange={handleCountChanged}
-                        aria-describedby="count-error-text"
+                        id="value"
+                        value={value}
+                        onChange={handleValueChanged}
+                        aria-describedby="value-error-text"
                         type='number'
                     />
                     { }
-                    {countError === '' ? null : <FormHelperText id="count-error-text">{countError}</FormHelperText>}
+                    {valueError === '' ? null : <FormHelperText id="count-error-text">{valueError}</FormHelperText>}
                 </FormControl>
             </Box>
-            <Button variant="contained" onClick={() => createArray(range, count)}>Create Array!</Button>
+            <Button
+                variant="contained"
+                disabled={isSorting} onClick={() => createArray(arrayLength, value)}
+
+            >Create Array!</Button>
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'row',
                 }}
             >
-                {dataArray.map((d) => (
+                {dataArray.map((x) => (
                     <motion.div
-                        key={d}
+                        key={x}
                         layout
                         transition={spring}
                         style={{
@@ -119,16 +126,23 @@ export default (() => {
                             margin: "0.2rem",
                             borderRadius: "10px",
                             width: "100px",
-                            height: "100px"
+                            height: "100px",
                         }}
                     >
-                        <div style={{ width: "50%", paddingTop: '20px', textAlign: 'center', margin: "0 auto" }}>
-                            <h2>{d}</h2>
+                        <div style={{
+                            width: "50%",
+                            paddingTop: '15px',
+                            textAlign: 'center',
+                            margin: "0 auto"
+                        }}>
+                            <Typography variant="h2" component="div">
+                                {x}
+                            </Typography>
                         </div>
                     </motion.div>
                 ))}
             </Box>
-            <Button variant="contained" onClick={() => bubbleSort(dataArray)}>Sort!</Button>
+            <Button variant="contained" disabled={isSorting} onClick={() => bubbleSort(dataArray)}>Sort!</Button>
             <Box sx={{ width: 300 }}>
                 <Slider
                     aria-label="Temperature"
