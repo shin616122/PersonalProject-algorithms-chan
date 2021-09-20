@@ -2,25 +2,24 @@
 yarn
 yarn dev
 ```
-Demo Page:
+####Demo Page:
 https://algorithms-chan.vercel.app/
 
-Start working in progress
-
+####Working in progress
 Algorithms to implement:
-
+---
 Sort algorithms:
-Bubble Sort ← Current
-Selection Sort
-Insertion Sort
-Merge Sort
-Quick Sort
-Heap Sort
-Counting Sort
-Radix Sort
-Bucket Sort
-
-Search Algorithms
-Trees
-Graph
+- Bubble Sort ← Current
+- Selection Sort
+- Insertion Sort
+- Merge Sort
+- Quick Sort
+- Heap Sort
+- Counting Sort
+- Radix Sort
+- Bucket Sort
+---
+- Search Algorithms
+- Trees
+- Graph
 etc...
