@@ -81,7 +81,7 @@ export default (() => {
                 }}
             >
                 <FormControl error={arrayLengthError === '' ? false : true} variant="standard">
-                    <InputLabel htmlFor="arrayLength">Range</InputLabel>
+                    <InputLabel htmlFor="arrayLength">Array Length</InputLabel>
                     <Input
                         id="arrayLength"
                         value={arrayLength}
@@ -92,7 +92,7 @@ export default (() => {
                     {arrayLengthError === '' ? null : <FormHelperText id="range-error-text">{arrayLengthError}</FormHelperText>}
                 </FormControl>
                 <FormControl error={valueError === '' ? false : true} variant="standard" style={{ paddingLeft: '20px' }}>
-                    <InputLabel htmlFor="value" style={{ paddingLeft: '20px' }}>Count</InputLabel>
+                    <InputLabel htmlFor="value" style={{ paddingLeft: '20px' }}>Values Range</InputLabel>
                     <Input
                         id="value"
                         value={value}
