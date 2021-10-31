@@ -17,6 +17,7 @@ export default (() => {
     const [arrayLengthError, setArrayLengthError] = useState<string>('');
     const [valueError, setValueError] = useState<string>('');
     const [isSorting, setIsSorting] = useState<boolean>(false);
+    const [isChecking, setIsChecking] = useState<boolean>(false);
 
     const createArray = (length: number, value: number) => {
         if (length < 2 || length > 20) {
@@ -31,13 +32,13 @@ export default (() => {
         setArrayLengthError('');
         setValueError('');
 
-        let randomnumbers = new Set<number>();
+        let randomNumbers = new Set<number>();
 
-        while (randomnumbers.size < length) {
-            randomnumbers.add(Math.floor(Math.random() * value) + 1);
+        while (randomNumbers.size < length) {
+            randomNumbers.add(Math.floor(Math.random() * value) + 1);
         }
 
-        setDataArray([...Array.from(randomnumbers)]);
+        setDataArray([...Array.from(randomNumbers)]);
     };
 
     const bubbleSort = async (data: number[]) => {
@@ -55,6 +56,27 @@ export default (() => {
         }
         setIsSorting(false);
     };
+
+    const selectionSort = async (data: number[]) => {
+        var i, j, min_idx;
+
+        // One by one move boundary of unsorted subarray
+        for (i = 0; i < data.length - 1; i++) {
+            // Find the minimum element in unsorted array
+            min_idx = i;
+            for (j = i + 1; j < data.length; j++)
+                if (data[j] < data[min_idx])
+                    min_idx = j;
+
+            // Swap the found minimum element with the first element
+            var temp = data[min_idx];
+            data[min_idx] = data[i];
+            data[i] = temp;
+
+            setDataArray([...data]);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+    }
 
     const handleArrayLengthChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
         setArrayLength(e.target.valueAsNumber);
@@ -115,13 +137,13 @@ export default (() => {
                     flexDirection: 'row',
                 }}
             >
-                {dataArray.map((x) => (
+                {dataArray.map((x, i) => (
                     <motion.div
                         key={x}
                         layout
                         transition={spring}
                         style={{
-                            background: "#FF008C",
+                            background: '#FF008C',
                             display: "inline-block",
                             margin: "0.2rem",
                             borderRadius: "10px",
@@ -142,7 +164,8 @@ export default (() => {
                     </motion.div>
                 ))}
             </Box>
-            <Button variant="contained" disabled={isSorting} onClick={() => bubbleSort(dataArray)}>Sort!</Button>
+            <Button variant="contained" disabled={isSorting} onClick={() => bubbleSort(dataArray)}>Bubble Sort!</Button>
+            <Button variant="contained" disabled={isSorting} onClick={() => selectionSort(dataArray)}>Selection Sort!</Button>
             <Box sx={{ width: 300 }}>
                 <Slider
                     aria-label="Temperature"
